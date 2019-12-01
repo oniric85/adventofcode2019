@@ -21,43 +21,52 @@ func calculateAdjustedRequiredFuel(mass int) int {
 	return fuel + calculateAdjustedRequiredFuel(fuel)
 }
 
-func solve1(masses []string) int {
+func solve1(masses []int) int {
 	totalFuelRequirement := 0
-	for _, massString := range masses {
-		massInt, err := strconv.Atoi(massString)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fuel := calculateRequiredFuel(massInt)
-		log.Printf("Fuel needed for module with weight %d is %d", massInt, fuel)
+	for _, mass := range masses {
+		fuel := calculateRequiredFuel(mass)
+		log.Printf("Fuel needed for module with weight %d is %d", mass, fuel)
 		totalFuelRequirement += fuel
 	}
 
 	return totalFuelRequirement
 }
 
-func solve2(masses []string) int {
+func solve2(masses []int) int {
 	totalFuelRequirement := 0
-	for _, massString := range masses {
-		massInt, err := strconv.Atoi(massString)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fuel := calculateAdjustedRequiredFuel(massInt)
-		log.Printf("Adjusted fuel needed for module with weight %d is %d", massInt, fuel)
+	for _, mass := range masses {
+		fuel := calculateAdjustedRequiredFuel(mass)
+		log.Printf("Adjusted fuel needed for module with weight %d is %d", mass, fuel)
 		totalFuelRequirement += fuel
 	}
 
 	return totalFuelRequirement
+}
+
+func convertInputToArray(input string) []int {
+	lines := strings.Split(string(input), "\n")
+
+	ints := make([]int, 0, len(lines))
+
+	for _, line := range lines {
+		n, err := strconv.Atoi(line)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		ints = append(ints, n)
+	}
+
+	return ints
 }
 
 func main() {
-	lines, err := ioutil.ReadFile("input.txt")
+	content, err := ioutil.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	input := strings.Split(string(lines), "\n")
+	input := convertInputToArray(string(content))
 
 	result := solve1(input)
 	adjustedResult := solve2(input)
