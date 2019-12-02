@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"strconv"
@@ -24,10 +25,9 @@ func convertInputToArray(input string) []int {
 	return ints
 }
 
-func solve1(program []int) int {
-	// set initial state 1202
-	program[1] = 12
-	program[2] = 2
+func runProgram(program []int, noun int, verb int) int {
+	program[1] = noun
+	program[2] = verb
 
 	pos := 0
 	for program[pos] != 99 {
@@ -49,6 +49,26 @@ func solve1(program []int) int {
 	return program[0]
 }
 
+func solve1(program []int) int {
+	// set initial state 1202
+	return runProgram(program, 12, 2)
+}
+
+func solve2(program []int, wanted int) (int, error) {
+	for i := 0; i <= 99; i++ {
+		for j := 0; j <= 99; j++ {
+			copied := make([]int, len(program))
+			copy(copied, program)
+			result := runProgram(copied, i, j)
+			if result == wanted {
+				return 100*i + j, nil
+			}
+		}
+	}
+
+	return 0, fmt.Errorf("Could not find input to get %d", wanted)
+}
+
 func main() {
 	content, err := ioutil.ReadFile("input.txt")
 	if err != nil {
@@ -56,8 +76,18 @@ func main() {
 	}
 
 	input := convertInputToArray(string(content))
+	input2 := make([]int, len(input))
+	copy(input2, input)
 
 	result := solve1(input)
 
+	wanted := 19690720
+	result2, err := solve2(input2, wanted)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	log.Println("Value at position 0 after program execution is", result)
+	log.Printf("Input needed to obtain %d is %d", wanted, result2)
 }
