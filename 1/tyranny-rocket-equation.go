@@ -44,7 +44,7 @@ func solve2(masses []int) int {
 }
 
 func convertInputToArray(input string) []int {
-	lines := strings.Split(string(input), "\n")
+	lines := strings.Split(input, "\n")
 
 	ints := make([]int, 0, len(lines))
 
