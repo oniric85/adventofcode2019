@@ -19,12 +19,13 @@ func convertInputToArrays(input string) ([]string, []string) {
 	return strings.Split(wires[0], ","), strings.Split(wires[1], ",")
 }
 
-func mapPointsOfWire(wire []string) map[Point]bool {
-	points := make(map[Point]bool)
+func mapPointsOfWire(wire []string) map[Point]int {
+	points := make(map[Point]int)
 
+	length := 0
 	current := Point{0, 0}
 
-	points[current] = true
+	points[current] = length
 
 	for _, instruction := range wire {
 		direction := string(instruction[0])
@@ -47,9 +48,14 @@ func mapPointsOfWire(wire []string) map[Point]bool {
 				x--
 			}
 
+			length++
+
 			point := Point{x, y}
 
-			points[point] = true
+			// only save first time the point is encountered
+			if _, ok := points[point]; !ok {
+				points[point] = length
+			}
 
 			steps--
 		}
@@ -64,10 +70,7 @@ func manhattanDistance(x1, y1, x2, y2 float64) float64 {
 	return math.Abs(x2-x1) + math.Abs(y2-y1)
 }
 
-func solve1(wire1 []string, wire2 []string) float64 {
-	points1 := mapPointsOfWire(wire1)
-	points2 := mapPointsOfWire(wire2)
-
+func solve1(points1, points2 map[Point]int) float64 {
 	minDistance := math.Inf(1)
 
 	for point := range points2 {
@@ -85,6 +88,24 @@ func solve1(wire1 []string, wire2 []string) float64 {
 	return minDistance
 }
 
+func solve2(points1, points2 map[Point]int) float64 {
+	minLength := math.Inf(1)
+
+	for point := range points2 {
+		if point.X == 0 && point.Y == 0 {
+			continue
+		}
+
+		if _, ok := points1[point]; ok {
+			if length := points1[point] + points2[point]; float64(length) < minLength {
+				minLength = float64(length)
+			}
+		}
+	}
+
+	return minLength
+}
+
 func main() {
 	content, err := ioutil.ReadFile("input.txt")
 	if err != nil {
@@ -93,7 +114,12 @@ func main() {
 
 	wire1, wire2 := convertInputToArrays(string(content))
 
-	minDistance := solve1(wire1, wire2)
+	points1 := mapPointsOfWire(wire1)
+	points2 := mapPointsOfWire(wire2)
+
+	minDistance := solve1(points1, points2)
+	minLength := solve2(points1, points2)
 
 	log.Println("Distance of closest crossing point is", minDistance)
+	log.Println("Minimum length of both wires to crossing point is", minLength)
 }
