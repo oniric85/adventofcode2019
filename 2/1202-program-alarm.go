@@ -40,7 +40,7 @@ func runProgram(program []int, noun int, verb int) int {
 		} else if program[pos] == 2 {
 			program[dest] = program[pos1] * program[pos2]
 		} else {
-			log.Panic("Found opcode", program[pos])
+			log.Panic("Found opcode ", program[pos])
 		}
 
 		pos += 4
