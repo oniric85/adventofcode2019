@@ -89,6 +89,46 @@ func runProgram(program []int) {
 				return
 			}
 			pos += 2
+		} else if opcode == 5 {
+			param1 := getArgument(modes, pos, 1, 0, program)
+			if param1 != 0 {
+				param2 := getArgument(modes, pos, 2, 0, program)
+				pos = param2
+			} else {
+				pos += 3
+			}
+		} else if opcode == 6 {
+			param1 := getArgument(modes, pos, 1, 0, program)
+			if param1 == 0 {
+				param2 := getArgument(modes, pos, 2, 0, program)
+				pos = param2
+			} else {
+				pos += 3
+			}
+		} else if opcode == 7 {
+			param1 := getArgument(modes, pos, 1, 0, program)
+			param2 := getArgument(modes, pos, 2, 0, program)
+			param3 := getArgument(modes, pos, 3, 1, program)
+
+			if param1 < param2 {
+				program[param3] = 1
+			} else {
+				program[param3] = 0
+			}
+
+			pos += 4
+		} else if opcode == 8 {
+			param1 := getArgument(modes, pos, 1, 0, program)
+			param2 := getArgument(modes, pos, 2, 0, program)
+			param3 := getArgument(modes, pos, 3, 1, program)
+
+			if param1 == param2 {
+				program[param3] = 1
+			} else {
+				program[param3] = 0
+			}
+
+			pos += 4
 		} else {
 			log.Panic("Found opcode ", opcode)
 		}
