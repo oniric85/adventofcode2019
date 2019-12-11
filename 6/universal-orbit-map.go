@@ -13,7 +13,6 @@ type Object struct {
 	objects []*Object
 }
 
-// We n
 func (obj Object) sumPathLenghts(level int) int {
 	sum := 0
 
