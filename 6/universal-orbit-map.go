@@ -71,7 +71,7 @@ func main() {
 
 	objectsMap := convertInputToObjectsMap(string(content))
 
-	result := solve1(objectsMap)
+	checksum := solve1(objectsMap)
 
-	fmt.Println("Checksum is", result)
+	fmt.Println("Checksum is", checksum)
 }
